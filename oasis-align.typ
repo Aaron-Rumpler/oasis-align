@@ -1,4 +1,5 @@
 #let oasis-align(
+  gutter: auto,
   int-frac: 0.5, 
   tolerance: 0.001pt, 
   max-iterations: 50, 
@@ -16,6 +17,8 @@
   if int-frac <= 0 or int-frac >= 1 {return(error("int-frac must be between 0 and 1!"))}
   if int-dir != -1 and int-dir != 1 {return(error("Direction must be 1 or -1!"))}
   
+  set grid(column-gutter: gutter) if gutter != auto
+
   // use layout to measure container
   layout(size => {
     let container = size.width
@@ -93,7 +96,9 @@
   })
 }
 
-#let oasis-align-images(image1, image2) = context {
+#let oasis-align-images(gutter: auto, image1, image2) = context {
+
+  set grid(column-gutter: gutter) if gutter != auto
 
   // Find dimentional ratio between images
   let block1 = measure(image(image1, width: 1in))
