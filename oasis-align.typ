@@ -1,13 +1,25 @@
+#let oasis-align-gutter-state = state("oasis-align-gutter-state", auto)
+
+#let oasis-align-debug-state = state("oasis-align-debug-state", false)
+
+#let oasis-align-gutter(gutter) = oasis-align-gutter-state.update(gutter)
+
+#let oasis-align-debug(debug) = oasis-align-debug-state.update(debug)
+
 #let oasis-align(
-  gutter: auto,
+  gutter: oasis-align-gutter-state,
   int-frac: 0.5,
   tolerance: 0.001pt,
   max-iterations: 50,
   int-dir: 1,
-  debug: false,
+  debug: oasis-align-debug-state,
   item1,
   item2,
 ) = context {
+
+  let gutter = if type(gutter) == state {gutter.get()} else {gutter}
+
+  let debug = if type(debug) == state {debug.get()} else {debug}
 
   // Debug functions
   let error(message) = text(red, weight: "bold", message)
@@ -96,7 +108,9 @@
   })
 }
 
-#let oasis-align-images(gutter: auto, image1, image2) = context {
+#let oasis-align-images(gutter: oasis-align-gutter-state, image1, image2) = context {
+
+  let gutter = if type(gutter) == state {gutter.get()} else {gutter}
 
   set grid(column-gutter: gutter) if gutter != auto
 
