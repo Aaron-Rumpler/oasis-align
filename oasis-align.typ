@@ -1,4 +1,5 @@
 #let oasis-align(
+  gutter: auto,
   int-frac: 0.5, 
   tolerance: 0.001pt, 
   max-iterations: 50, 
@@ -19,7 +20,8 @@
   // use layout to measure container
   layout(size => {
     let container = size.width
-    let gutter = if grid.column-gutter == () {0pt} 
+    let gutter = if gutter != auto {gutter} 
+                 else if grid.column-gutter == () {0pt} 
                  else {grid.column-gutter.at(0)}
     
     let width1    // Bounding width of item1
@@ -61,7 +63,7 @@
       // Check if within tolerance
       if diff < tolerance or n >= max-iterations {
         if debug {heads-up("Tolerance reached!")}
-        grid(columns: (width1, width2), item1, item2)
+        grid(columns: (width1, width2), column-gutter: gutter, item1, item2)
         break
       }
       // Use bisection method by setting new bounds
@@ -93,7 +95,7 @@
   })
 }
 
-#let oasis-align-images(image1, image2) = context {
+#let oasis-align-images(gutter: auto, image1, image2) = context {
 
   // Find dimentional ratio between images
   let block1 = measure(image(image1, width: 1in))
@@ -103,7 +105,8 @@
   layout(size => {
     // Measure size of continaner
     let container = size.width
-    let gutter = if grid.column-gutter == () {0pt} 
+    let gutter = if gutter != auto {gutter} 
+                 else if grid.column-gutter == () {0pt} 
                  else {grid.column-gutter.at(0)}
 
     // Set widths of images
@@ -111,7 +114,7 @@
     let calcWidth2 = (container - gutter)/(ratio + 1)
 
     // Display images in grid
-    grid(columns: (calcWidth1, calcWidth2), gutter: gutter,
+    grid(columns: (calcWidth1, calcWidth2), column-gutter: gutter,
       image(image1),
       image(image2)
     ) 
